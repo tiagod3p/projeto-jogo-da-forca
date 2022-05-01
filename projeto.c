@@ -22,12 +22,12 @@ void filtragem(char *palavraBuscada, char *definicaoBuscada)
 
     while (fgets(conteudo, sizeof(conteudo), file))
     {
-        char *leftString = strtok(conteudo, delimitador);
-        char *rightString = strtok(NULL, delimitador);
+        char *palavra = strtok(conteudo, delimitador);
+        char *descricao = strtok(NULL, delimitador);
 
-        if (!(strcmp(leftString, palavraBuscada)))
+        if (!(strcmp(palavra, palavraBuscada)))
         {
-            strcpy(definicaoBuscada, rightString);
+            strcpy(definicaoBuscada, descricao);
             break;
         }
     }
@@ -37,6 +37,8 @@ void filtragem(char *palavraBuscada, char *definicaoBuscada)
 
 void cadastrarPalavra()
 {
+    printf("--------- CADASTRAR PALAVRA ---------\n\n");
+
     char palavra[100];
     char definicao[100];
     char *delimitador = "-";
@@ -74,10 +76,12 @@ void cadastrarPalavra()
 
 void buscarPalavra()
 {
+    printf("--------- BUSCAR PALAVRA ---------\n\n");
+
     char busca[100];
     char definicaoBuscada[100] = "";
 
-    printf("Busca: ");
+    printf("Palavra que deseja buscar: ");
     scanf(" %s", busca);
 
     filtragem(busca, definicaoBuscada);
@@ -89,6 +93,209 @@ void buscarPalavra()
     else
     {
         printf("Definicao: %s", definicaoBuscada);
+    }
+}
+
+void sortearPalavraDoDicionario(char *palavraSorteada)
+{
+    FILE *file;
+    file = fopen("teste.txt", "r");
+    verificaErroDeArquivo(file);
+
+    char conteudo[100];
+    char *delimitador = "-";
+    char *palavras[100];
+    int incremento = 0;
+    int tamanhoDicionario = 0;
+
+    while (fgets(conteudo, sizeof(conteudo), file))
+    {
+        char *palavra = strtok(conteudo, delimitador);
+        char *descricao = strtok(NULL, delimitador);
+
+        palavras[incremento] = malloc(sizeof(char) * 101);
+        strcpy(palavras[incremento], palavra);
+
+        incremento++;
+    }
+    fclose(file);
+
+    for (int i = 0; i <= 100; i++)
+    {
+        if (palavras[i] == NULL)
+        {
+            tamanhoDicionario = i - 1;
+            break;
+        }
+    }
+
+    strcpy(palavraSorteada, palavras[rand() % tamanhoDicionario]);
+}
+
+void formataLetras(char *letrasJaDigitadas, char *letrasFormatadas)
+{
+    strcpy(letrasFormatadas, "");
+
+    for (int i = 0; i <= strlen(letrasJaDigitadas); i++)
+    {
+        if (i == strlen(letrasJaDigitadas) - 2)
+        {
+            sprintf(letrasFormatadas, "%s%c e ", letrasFormatadas, letrasJaDigitadas[i]);
+        }
+        else if (i == strlen(letrasJaDigitadas) - 1)
+        {
+            sprintf(letrasFormatadas, "%s%c", letrasFormatadas, letrasJaDigitadas[i]);
+        }
+        else
+        {
+            sprintf(letrasFormatadas, "%s%c, ", letrasFormatadas, letrasJaDigitadas[i]);
+        }
+    }
+}
+
+void adicionaAsteriscos(char *palavraSorteada, char *palavraPraDescobrirComAsteriscos, char letraDigitada, int *erros)
+{
+    char palavraPraDescobrirComAsteriscosAuxiliar[100];
+    strcpy(palavraPraDescobrirComAsteriscosAuxiliar, palavraPraDescobrirComAsteriscos);
+
+    for (int i = 0; i <= strlen(palavraSorteada) - 1; i++)
+    {
+        if (toupper(palavraSorteada[i]) == toupper(letraDigitada))
+        {
+            palavraPraDescobrirComAsteriscos[i] = toupper(letraDigitada);
+        }
+        else if (palavraPraDescobrirComAsteriscos[i] == NULL)
+        {
+            palavraPraDescobrirComAsteriscos[i] = '.';
+        }
+    }
+
+    if (strcmp(palavraPraDescobrirComAsteriscos, palavraPraDescobrirComAsteriscosAuxiliar) == 0)
+    {
+        *erros = *erros + 1;
+    }
+}
+
+void bonecoDeErros(int erros)
+{
+    switch (erros)
+    {
+    case 0:
+        printf("X==:==\n");
+        printf("X     \n");
+        printf("X     \n");
+        printf("X     \n");
+        printf("X     \n");
+        printf("X     \n");
+        printf("===========\n");
+        break;
+    case 1:
+        printf("X==:==\n");
+        printf("X  :  \n");
+        printf("X  O  \n");
+        printf("X     \n");
+        printf("X     \n");
+        printf("X     \n");
+        printf("===========\n");
+        break;
+    case 2:
+        printf("X==:==\n");
+        printf("X  :  \n");
+        printf("X  O  \n");
+        printf("X  |  \n");
+        printf("X     \n");
+        printf("X     \n");
+        printf("===========\n");
+        break;
+    case 3:
+        printf("X==:==\n");
+        printf("X  :  \n");
+        printf("X  O  \n");
+        printf("X \\| \n");
+        printf("X     \n");
+        printf("X     \n");
+        printf("===========\n");
+        break;
+    case 4:
+        printf("X==:==\n");
+        printf("X  :  \n");
+        printf("X  O  \n");
+        printf("X \\|/ \n");
+        printf("X     \n");
+        printf("X     \n");
+        printf("===========\n");
+        break;
+    case 5:
+        printf("X==:==\n");
+        printf("X  :  \n");
+        printf("X  O  \n");
+        printf("X \\|/ \n");
+        printf("X /   \n");
+        printf("X     \n");
+        printf("===========\n");
+        break;
+    case 6:
+        printf("X==:==\n");
+        printf("X  :  \n");
+        printf("X  O  \n");
+        printf("X \\|/ \n");
+        printf("X / \\ \n");
+        printf("X     \n");
+        printf("===========\n");
+        break;
+    default:
+        break;
+    }
+}
+
+void jogarForca()
+{
+    char palavraSorteada[100] = "";
+    char letrasJaDigitadas[100] = "";
+    char palavraPraDescobrirComAsteriscos[100] = "";
+    char letraDigitada;
+    char letrasFormatadas[100] = "";
+    int erros = 0;
+
+    sortearPalavraDoDicionario(palavraSorteada);
+
+    printf("--------- JOGO DA FORCA ---------\n\n");
+
+    while (1)
+    {
+        adicionaAsteriscos(palavraSorteada, palavraPraDescobrirComAsteriscos, letraDigitada, &erros);
+
+        bonecoDeErros(erros);
+
+        printf("%s\n\n", palavraPraDescobrirComAsteriscos);
+
+        if (strchr(palavraPraDescobrirComAsteriscos, '.') == NULL)
+        {
+            printf("Parabens, voce ganhou. A palavra correta era: %s.\n\n", palavraSorteada);
+            break;
+        }
+
+        if (erros >= 6)
+        {
+            printf("Voce perdeu. A palavra correta era: %s.\n\n", palavraSorteada);
+            break;
+        }
+
+        formataLetras(letrasJaDigitadas, letrasFormatadas);
+
+        printf("Letras ja digitadas: %s\n\n", letrasFormatadas);
+
+        printf("Digite uma letra: ");
+        scanf(" %c", &letraDigitada);
+
+        if (strchr(letrasJaDigitadas, toupper(letraDigitada)) != NULL)
+        {
+            printf("A letra: %c ja foi digitada. Digite uma nova letra.\n", toupper(letraDigitada));
+            erros--;
+            continue;
+        }
+
+        sprintf(letrasJaDigitadas, "%s%c", letrasJaDigitadas, toupper(letraDigitada));
     }
 }
 
@@ -110,7 +317,7 @@ void opcoes()
             buscarPalavra();
             break;
         case 3:
-            printf("Value is 3\n");
+            jogarForca();
             break;
         case 4:
             printf("Obrigado, volte sempre!\n");
